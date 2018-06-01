@@ -1,0 +1,4 @@
+sceneSetups:
+- path: C:/Users/JAEJUN/Documents/TR_Quiz/Assets/Scene/Main.unity
+  isLoaded: 1
+  isActive: 1
