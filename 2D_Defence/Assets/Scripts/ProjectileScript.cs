@@ -8,8 +8,14 @@ public class ProjectileScript : MonoBehaviour {
     public float speed;               // 발사체 속도
     public Vector3 direction;         // 발사체 방향
     public float lifeDuration = 10f;  //발사체가 자폭하기 전까지 살아있는 시간.
+
+
+    private Rigidbody2D rb2D;
+
 	// Use this for initialization
 	void Start () {
+        rb2D = GetComponent<Rigidbody2D>();
+        
         // 방향 정규화
         direction = direction.normalized;
         // 회전 값
@@ -17,10 +23,18 @@ public class ProjectileScript : MonoBehaviour {
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         // 자폭용 타이머
         Destroy(gameObject, lifeDuration);
+
 	}
-	
-	// Update is called once per frame
+
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        rb2D.MovePosition(transform.position + direction * Time.fixedDeltaTime * speed);
+    }
+    /*
 	void Update () {
         transform.position += direction * Time.deltaTime * speed;
 	}
+    */
+    
 }
