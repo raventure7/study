@@ -13,17 +13,59 @@ public class PandaScript : MonoBehaviour {
     private int AnimEatTriggerHash = Animator.StringToHash("EatTrigger");
 
     private Rigidbody2D rb2D;
+    //private int currentWaypointNumber;
+    private const float changeDist = 0.02f;
+    private static GameManagerScript gameManager;
+    private Waypoint currentWaypoint;
 
-	// Use this for initialization
+    // Use this for initialization
 	void Start () {
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        if (gameManager == null) {
+            gameManager = FindObjectOfType<GameManagerScript>();
+        }
+        currentWaypoint = gameManager.firstWaypoint;
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        if(currentWaypoint == null)
+        {
+            animator.SetTrigger(AnimEatTriggerHash);
+            Destroy(this);
+            return;
+        }
+        float dist = Vector2.Distance(transform.position, currentWaypoint.Getposition());
+        //Debug.Log("Dist : " + dist);
+        if (dist <= changeDist)
+        {
+            Debug.Log("도착 : " + dist);
+            currentWaypoint = currentWaypoint.GetNextWaypoint();
+        }
+        else
+        {
+            MoveTowards(currentWaypoint.Getposition());
+        }
+        /*
+        if (currentWaypointNumber == gameManager.waypoints.Length)
+        {
+            animator.SetTrigger(AnimEatTriggerHash);
+            Destroy(this);
+            return;
+        }
+        float dist = Vector2.Distance(transform.position, gameManager.waypoints[currentWaypointNumber]);
+        if(dist <= changeDist)
+        {
+            currentWaypointNumber++;
+        }
+        else
+        {
+            MoveTowards(gameManager.waypoints[currentWaypointNumber]);
+        }
+        */
+    }
     private void MoveTowards(Vector3 destination)
     {
         // step 을 만든다음, 판단를 그 만큼 목표 지점으로 이동 시킨다.
